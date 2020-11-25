@@ -34,7 +34,10 @@ def parse_md(content):
     if len(split) < 2:
         raise Exception("error with triple dashes separating front matter")
 
-    front_matter = yaml.load(split[0], Loader=yaml.Loader)
+    try:
+        front_matter = yaml.load(split[0], Loader=yaml.Loader)
+    except yaml.YAMLError as e:
+        raise Exception("error loading front matter YAML")
 
     markdown = split[1].strip()
 
