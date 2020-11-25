@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "cvebased"
+version = "0.1.0"
+description = "A utility library to ease interactions with cvebase.com data"
+authors = ["cvebase <hello@cvebase.com>"]
+maintainers = ["cvebase <hello@cvebase.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://www.cvebase.com/"
+repository = "https://github.com/cvebase/cvebased"
+keywords = [
+    "cvebase",
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+"ruamel.yaml" = "^0.16.12"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
