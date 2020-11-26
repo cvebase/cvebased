@@ -41,7 +41,7 @@ def add_cve_front_matter(path_to_repo: str, data: dict) -> None:
                 ex_data.setdefault(k, []).append(el)
             if len(ex_data[k]) > 1:
                 ex_data[k] = dedupe_sort(ex_data[k])
-        write_md(path_to_cve, ex_data)
+        write_md(path_to_cve, ex_data, advisory)
     else:
         # if not exist, generate new file
         compile_cve(path_to_repo, data)
