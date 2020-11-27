@@ -6,9 +6,8 @@ from typing import Optional, AnyStr, Dict
 from cvebased.common import dedupe_sort
 
 # setup YAML loader
-yaml = ruamel.yaml.YAML()
+yaml = ruamel.yaml.YAML(typ='safe')
 yaml.indent(mapping=2, sequence=4, offset=4)
-yaml.allow_duplicate_keys = False
 
 
 def compile_researcher(path_to_repo, data):
@@ -97,6 +96,7 @@ def parse_md(content: str) -> (dict, str):
         raise Exception("error with triple dashes separating front matter")
 
     try:
+        # front_matter = ruamel.yaml.load(split[0], Loader=ruamel.yaml.Loader)
         front_matter = yaml.load(split[0])
     except ruamel.yaml.YAMLError as e:
         raise Exception("error loading front matter YAML")
