@@ -5,6 +5,7 @@ from cvebased.repo import (
     compile_cve,
     parse_md,
     add_cve_front_matter,
+    write_md,
 )
 
 
@@ -43,6 +44,34 @@ def test_add_cve_front_matter():
         fm, md = parse_md(f.read())
         assert fm['id'] == 'CVE-2020-14883'
         assert fm['courses'] == ['http://pentesterlab.com']
+
+    # cleanup
+    shutil.rmtree('./tmp/cve', ignore_errors=True)
+
+
+def test_write_md():
+    # scenario: same content to be written
+    data = {'id': 'CVE-2020-14882', 'pocs': ['http://example.com/poc'], 'advisory': 'lorem ipsum'}
+    compile_cve('./tmp', data)
+    want_filepath = './tmp/cve/2020/14xxx/CVE-2020-14882.md'
+    with open(want_filepath, 'r') as f:
+        written = write_md(
+            want_filepath,
+            {key: val for key, val in data.items() if key != 'advisory'},
+            data['advisory'],
+            f.read()
+        )
+        assert written is not True
+
+    # scenario: new content to be written
+    data = {'id': 'CVE-2020-14883', 'pocs': ['http://example.com/poc2'], 'advisory': 'dolor mucho'}
+    want_filepath = './tmp/cve/2020/14xxx/CVE-2020-14883.md'
+    written = write_md(
+        want_filepath,
+        {key: val for key, val in data.items() if key != 'advisory'},
+        data['advisory'],
+    )
+    assert written is True
 
     # cleanup
     shutil.rmtree('./tmp/cve', ignore_errors=True)
