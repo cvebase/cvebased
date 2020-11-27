@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cvebased"
-version = "0.1.6"
+version = "0.1.7"
 description = "A utility library to ease interactions with cvebase.com data"
 authors = ["cvebase <hello@cvebase.com>"]
 maintainers = ["cvebase <hello@cvebase.com>"]
