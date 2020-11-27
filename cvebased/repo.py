@@ -2,6 +2,7 @@ import ruamel.yaml
 import os
 from io import StringIO
 from pathlib import Path
+from typing import Optional, AnyStr, Dict
 from cvebased.common import dedupe_sort
 
 # setup YAML loader
@@ -12,10 +13,13 @@ yaml.allow_duplicate_keys = False
 
 def compile_researcher(path_to_repo, data):
     filepath = os.path.join(path_to_repo, 'researcher', f"{data['alias']}.md")
+
     # move bio from yaml field to markdown content
     markdown = ''
     if 'bio' in data:
-        markdown = data.pop('bio')
+        markdown = data['bio']
+        data = {key: val for key, val in data.items() if key != 'bio'}
+
     write_md(filepath, data, markdown)
     return filepath
 
@@ -25,10 +29,13 @@ def compile_cve(path_to_repo, data):
     if not os.path.exists(dirpath):
         os.makedirs(dirpath)
     filepath = os.path.join(dirpath, f"{data['id']}.md")
+
     # move advisory from yaml field to markdown content
     markdown = ''
     if 'advisory' in data:
-        markdown = data.pop('advisory')
+        markdown = data['advisory']
+        data = {key: val for key, val in data.items() if key != 'advisory'}
+
     write_md(filepath, data, markdown)
     return filepath
 
