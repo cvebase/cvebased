@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cvebased"
-version = "0.1.4"
+version = "0.1.5"
 description = "A utility library to ease interactions with cvebase.com data"
 authors = ["cvebase <hello@cvebase.com>"]
 maintainers = ["cvebase <hello@cvebase.com>"]
@@ -11,7 +11,6 @@ repository = "https://github.com/cvebase/cvebased"
 keywords = [
     "cvebase",
 ]
-
 
 [tool.poetry.dependencies]
 python = "^3.8"
