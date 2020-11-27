@@ -1,6 +1,13 @@
-from ruamel import yaml
+import ruamel.yaml
 import os
+from io import StringIO
+from pathlib import Path
 from cvebased.common import dedupe_sort
+
+# setup YAML loader
+yaml = ruamel.yaml.YAML()
+yaml.indent(mapping=2, sequence=4, offset=4)
+yaml.allow_duplicate_keys = False
 
 
 def compile_researcher(path_to_repo, data):
@@ -51,9 +58,7 @@ def write_md(filepath, front_matter, markdown=''):
     with open(filepath, 'w+') as file:
         file.seek(0)
         file.write("---\n")
-        y = yaml.YAML()
-        y.indent(mapping=2, sequence=4, offset=4)
-        y.dump(front_matter, file)
+        yaml.dump(front_matter, file)
         file.write("---\n")
         if markdown != '':
             file.write("{}\n".format(markdown))
@@ -67,8 +72,8 @@ def parse_md(content: str) -> (dict, str):
         raise Exception("error with triple dashes separating front matter")
 
     try:
-        front_matter = yaml.load(split[0], Loader=yaml.Loader)
-    except yaml.YAMLError as e:
+        front_matter = yaml.load(split[0])
+    except ruamel.yaml.YAMLError as e:
         raise Exception("error loading front matter YAML")
 
     markdown = split[1].strip()
@@ -113,3 +118,42 @@ def search_walk(search_path, cve):
             if file.endswith("{}.md".format(cve)):
                 return os.path.join(p, file)
     raise ValueError("{}.md does not exist".format(cve))
+
+
+"""Various yaml utility functions
+dump to string instead of file"""
+
+
+# o->s
+def object_to_yaml_str(obj, options=None):
+    if options is None:
+        options = {}
+    string_stream = StringIO()
+    yaml.dump(obj, string_stream, **options)
+    output_str = string_stream.getvalue()
+    string_stream.close()
+    return output_str
+
+
+# s->o
+def yaml_string_to_object(string, options=None):
+    if options is None:
+        options = {}
+    return yaml.load(string, **options)
+
+
+# f->o
+def yaml_file_to_object(file_path, options=None):
+    if options is None:
+        options = {}
+    as_path_object = Path(file_path)
+    return yaml.load(as_path_object, **options)
+
+
+# o->f
+def object_to_yaml_file(obj, file_path, options=None):
+    if options is None:
+        options = {}
+    as_path_object = Path(Path(file_path))
+    with as_path_object.open('w') as output_file:
+        return yaml.dump(obj, output_file, **options)
